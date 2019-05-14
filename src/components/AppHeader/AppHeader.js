@@ -1,5 +1,5 @@
 import React from "react";
-import './AppHeader.css'
+import './AppHeader.css';
 
 const AppHeader = () => {
     return (
@@ -7,7 +7,7 @@ const AppHeader = () => {
             <h1>ToDo List</h1>
             <h2>ggg</h2>
         </div>
-    )
+    );
 }
 
-export default AppHeader
+export default AppHeader;
