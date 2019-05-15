@@ -12,9 +12,9 @@ export default class App extends React.Component {
 
     state = {
         todoData: [
-            {label: 'test 1', important: false, id: 1},
-            {label: 'test 2', important: true, id: 2},
-            {label: 'test 3', important: false, id: 3}
+            {label: 'test 1', important: false, id: 1, done: false},
+            {label: 'test 2', important: true, id: 2, done: false},
+            {label: 'test 3', important: false, id: 3, done: false}
         ]
     };
 
@@ -41,6 +41,28 @@ export default class App extends React.Component {
         })
     }
 
+    toggleDone = (id) => {
+        this.toggleProperty(id, 'done')
+    }
+
+    toggleImportant = (id) => {
+        this.toggleProperty(id, 'important')
+    }
+
+    toggleProperty = (id, property) => {
+        this.setState(({todoData}) => {
+            return {
+                todoData: todoData.map((el) => {
+                    if (el.id === id) {
+                        return {...el, [property]: !el[property]}
+                    } else {
+                        return el
+                    }
+                })
+            }
+        })
+    }
+
     render () {
         return (
             <div>
@@ -52,6 +74,8 @@ export default class App extends React.Component {
                 <ToDoList
                     todos={this.state.todoData}
                     onDeleted={this.deleteItem}
+                    onDoneToggled={this.toggleDone}
+                    onImportantToggled={this.toggleImportant}
                 />
                 <AddItem
                     onAdded={this.addItem}
