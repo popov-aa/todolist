@@ -22,7 +22,6 @@ export default class AddItem extends React.Component {
     }
 
     render() {
-        const { onAdded } = this.props
         return (
             <form className="add-item d-flex" onSubmit={this.onSubmit}>
                 <input type="text" className="form-control" onChange={this.onLabelChange} value={this.state.label}/>

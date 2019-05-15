@@ -8,24 +8,30 @@ import AddItem from '../AddItem';
 
 export default class App extends React.Component {
 
-    maxId = 100;
+    maxId = 0;
 
     state = {
         todoData: [
-            {label: 'test 1', important: false, id: 1, done: false},
-            {label: 'test 2', important: true, id: 2, done: false},
-            {label: 'test 3', important: false, id: 3, done: false}
+            this.createTodoItem('test 1'),
+            this.createTodoItem('test 2'),
+            this.createTodoItem('test 3'),
+            this.createTodoItem('test 4')
         ]
     };
 
-    addItem = (text) => {
+    createTodoItem(label) {
+        return {
+            label,
+            important: false,
+            done: false,
+            id: this.maxId++
+        }
+    }
+
+    addItem = (label) => {
         this.setState(({todoData}) => {
             let newTodoData = [...todoData]
-            newTodoData.push({
-                label: text,
-                important: false,
-                id: this.maxId++
-            })
+            newTodoData.push(this.createTodoItem(label))
             return {
                 todoData: newTodoData
             }
@@ -64,9 +70,11 @@ export default class App extends React.Component {
     }
 
     render () {
+        let doneCount = this.state.todoData.filter((el) => el.done).length
+        let todoCount = this.state.todoData.length - doneCount
         return (
             <div>
-                <AppHeader/>
+                <AppHeader doneCount={doneCount} todoCount={todoCount}/>
                 <div className="top-panel d-flex">
                     <SearchPanel/>
                     <ItemStatusFilter/>
