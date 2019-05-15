@@ -11,6 +11,7 @@ export default class App extends React.Component {
     maxId = 0;
 
     state = {
+        searchFilter: '',
         todoData: [
             this.createTodoItem('test 1'),
             this.createTodoItem('test 2'),
@@ -69,18 +70,28 @@ export default class App extends React.Component {
         })
     }
 
+    searchLabelChanged = (label) => {
+        this.setState({
+            searchFilter: label
+        })
+    }
+
     render () {
+        const {todoData, searchFilter} = this.state
         let doneCount = this.state.todoData.filter((el) => el.done).length
         let todoCount = this.state.todoData.length - doneCount
+        let newTodoData = this.state.searchFilter == '' ?
+            todoData :
+            todoData.filter((el) => el.label.includes(searchFilter))
         return (
             <div>
                 <AppHeader doneCount={doneCount} todoCount={todoCount}/>
                 <div className="top-panel d-flex">
-                    <SearchPanel/>
+                    <SearchPanel onChanged={this.searchLabelChanged}/>
                     <ItemStatusFilter/>
                 </div>
                 <ToDoList
-                    todos={this.state.todoData}
+                    todos={newTodoData}
                     onDeleted={this.deleteItem}
                     onDoneToggled={this.toggleDone}
                     onImportantToggled={this.toggleImportant}
