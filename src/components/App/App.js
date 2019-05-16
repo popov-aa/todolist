@@ -2,7 +2,7 @@ import React from 'react';
 
 import AppHeader from '../AppHeader';
 import SearchPanel from '../SearchPanel';
-import ItemStatusFilter from '../ItemStatusFilter'
+import {ItemStatusFilter, FilterType} from '../ItemStatusFilter'
 import ToDoList from '../TodoList';
 import AddItem from '../AddItem';
 
@@ -12,6 +12,7 @@ export default class App extends React.Component {
 
     state = {
         searchFilter: '',
+        filterType: FilterType.All,
         todoData: [
             this.createTodoItem('test 1'),
             this.createTodoItem('test 2'),
@@ -71,24 +72,34 @@ export default class App extends React.Component {
     }
 
     searchLabelChanged = (label) => {
-        this.setState({
-            searchFilter: label
-        })
+        this.setState({searchFilter: label})
+    }
+
+    filterTypeChanged = (filterType) => {
+        this.setState({filterType: filterType})
     }
 
     render () {
-        const {todoData, searchFilter} = this.state
+        const {todoData, searchFilter, filterType} = this.state
         let doneCount = this.state.todoData.filter((el) => el.done).length
         let todoCount = this.state.todoData.length - doneCount
-        let newTodoData = this.state.searchFilter == '' ?
+        let newTodoData = this.state.searchFilter === '' ?
             todoData :
             todoData.filter((el) => el.label.includes(searchFilter))
+        newTodoData = newTodoData.filter((el) => {
+            switch (filterType) {
+                case FilterType.All: return true;
+                case FilterType.Active: return !el.done;
+                case FilterType.Done: return el.done;
+                default: return false;
+            }
+        })
         return (
             <div>
                 <AppHeader doneCount={doneCount} todoCount={todoCount}/>
                 <div className="top-panel d-flex">
                     <SearchPanel onChanged={this.searchLabelChanged}/>
-                    <ItemStatusFilter/>
+                    <ItemStatusFilter onChanged={this.filterTypeChanged}/>
                 </div>
                 <ToDoList
                     todos={newTodoData}
